@@ -193,7 +193,8 @@ Room (abstract)
 | Room pricing multipliers | Template method pattern inside Room hierarchy |
 
 ---
-
-**Author:** Kishan Patel P  
+ 
 **Language:** Java 8+  
 **Architecture:** MVC + SOLID + Creational Design Patterns
+## Author
+Kishan Patel P 
