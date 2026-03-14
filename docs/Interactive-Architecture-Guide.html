@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hotel Booking System — Interactive Architecture Guide</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, #1e3a5f, #0f766e);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; color: #fff; }
+    header p { color: #94a3b8; margin-top: 8px; font-size: 1rem; }
+
+    nav {
+      display: flex; justify-content: center; gap: 12px;
+      padding: 20px; flex-wrap: wrap;
+      background: #1e293b; border-bottom: 1px solid #334155;
+    }
+    nav button {
+      padding: 8px 20px; border-radius: 20px; border: none;
+      background: #334155; color: #94a3b8; cursor: pointer;
+      font-size: 0.9rem; transition: all 0.2s;
+    }
+    nav button:hover, nav button.active {
+      background: #0f766e; color: #fff;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    h2 { font-size: 1.5rem; color: #38bdf8; margin-bottom: 20px; }
+    h3 { font-size: 1.1rem; color: #7dd3fc; margin: 24px 0 10px; }
+
+    p { color: #cbd5e1; line-height: 1.7; margin-bottom: 12px; }
+
+    .card {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .card .tag {
+      display: inline-block; padding: 2px 10px; border-radius: 10px;
+      font-size: 0.75rem; font-weight: 600; margin-bottom: 8px;
+    }
+    .tag.srp { background: #064e3b; color: #6ee7b7; }
+    .tag.ocp { background: #1e3a5f; color: #93c5fd; }
+    .tag.lsp { background: #3b1f5e; color: #d8b4fe; }
+    .tag.isp { background: #451a03; color: #fcd34d; }
+    .tag.dip { background: #4c0519; color: #fca5a5; }
+    .tag.factory { background: #0c4a6e; color: #7dd3fc; }
+    .tag.builder { background: #14532d; color: #86efac; }
+    .tag.singleton { background: #431407; color: #fdba74; }
+    .tag.prototype { background: #2e1065; color: #c4b5fd; }
+
+    code {
+      background: #0f172a; color: #38bdf8;
+      padding: 2px 8px; border-radius: 4px;
+      font-family: 'Courier New', monospace; font-size: 0.9rem;
+    }
+
+    pre {
+      background: #020817; border: 1px solid #1e40af;
+      border-radius: 8px; padding: 16px; overflow-x: auto;
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      color: #93c5fd; margin: 12px 0; line-height: 1.6;
+    }
+
+    .tree {
+      background: #020817; border-left: 3px solid #0f766e;
+      padding: 16px 20px; border-radius: 0 8px 8px 0;
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      color: #6ee7b7; line-height: 2; margin: 12px 0;
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th { background: #0f766e; color: #fff; padding: 10px 14px; text-align: left; }
+    td { padding: 10px 14px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+    tr:hover td { background: #1e293b; }
+
+    .checklist { list-style: none; }
+    .checklist li {
+      padding: 10px 0; border-bottom: 1px solid #1e293b;
+      display: flex; align-items: center; gap: 12px; cursor: pointer;
+    }
+    .checklist li .check {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #334155; background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .checklist li.done .check { background: #0f766e; border-color: #0f766e; }
+    .checklist li.done .check::after { content: '✓'; color: white; font-size: 12px; }
+    .checklist li.done span { color: #64748b; text-decoration: line-through; }
+
+    .pattern-flow {
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap; margin: 16px 0;
+    }
+    .flow-box {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 8px; padding: 10px 16px;
+      font-size: 0.85rem; color: #e2e8f0;
+    }
+    .flow-arrow { color: #0f766e; font-size: 1.2rem; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 6px; padding: 6px 12px; margin: 4px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏨 Hotel Booking System</h1>
+  <p>Interactive Architecture Guide — MVC · SOLID · Design Patterns · Java</p>
+</header>
+
+<nav>
+  <button class="active" onclick="show('overview', this)">Overview</button>
+  <button onclick="show('solid', this)">SOLID Principles</button>
+  <button onclick="show('patterns', this)">Design Patterns</button>
+  <button onclick="show('structure', this)">Project Structure</button>
+  <button onclick="show('checklist', this)">Build Checklist</button>
+</nav>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <h2>System Overview</h2>
+    <p>A Java console application demonstrating enterprise-grade architecture patterns for a hotel room reservation system.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="tag srp">MVC</div>
+        <h3>Architecture</h3>
+        <p>Model-View-Controller separates data, UI, and business logic into independent layers.</p>
+      </div>
+      <div class="card">
+        <div class="tag factory">Patterns</div>
+        <h3>4 Design Patterns</h3>
+        <p>Factory Method, Builder, Singleton, and Prototype — all Creational patterns.</p>
+      </div>
+      <div class="card">
+        <div class="tag ocp">SOLID</div>
+        <h3>5 Principles</h3>
+        <p>Every class is designed with a specific SOLID principle in mind.</p>
+      </div>
+      <div class="card">
+        <div class="tag builder">Extensible</div>
+        <h3>Open for Extension</h3>
+        <p>New room types, view layers, and hotel templates can be added without changing existing code.</p>
+      </div>
+    </div>
+
+    <h3>Core Entities</h3>
+    <table>
+      <tr><th>Entity</th><th>Responsibility</th><th>Pattern</th></tr>
+      <tr><td><code>User</code></td><td>Guest data</td><td>SRP</td></tr>
+      <tr><td><code>Hotel</code></td><td>Property data + availability</td><td>Prototype</td></tr>
+      <tr><td><code>Room</code></td><td>Abstract bookable unit</td><td>Factory + OCP</td></tr>
+      <tr><td><code>Booking</code></td><td>Reservation record</td><td>Builder</td></tr>
+      <tr><td><code>SystemConfig</code></td><td>App-wide settings</td><td>Singleton</td></tr>
+      <tr><td><code>PriceCalculator</code></td><td>GST + discount logic</td><td>SRP</td></tr>
+    </table>
+  </div>
+
+  <!-- SOLID -->
+  <div id="solid" class="section">
+    <h2>SOLID Principles Applied</h2>
+
+    <div class="card">
+      <div class="tag srp">S — Single Responsibility</div>
+      <h3>One class, one job</h3>
+      <p>Each class has exactly one reason to change.</p>
+      <pre>UserController    → authentication only
+HotelController   → hotel search only
+BookingController → reservations only
+PriceCalculator   → pricing only
+User              → guest data only</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag ocp">O — Open/Closed</div>
+      <h3>Open for extension, closed for modification</h3>
+      <p><code>Room</code> is abstract. Adding a <code>PentHouseRoom</code> requires zero changes to existing code:</p>
+      <pre>class PentHouseRoom extends Room {
+    protected double getPriceMultiplier() { return 8.0; }
+    public String getRoomType() { return "Penthouse"; }
+}</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag lsp">L — Liskov Substitution</div>
+      <h3>Subtypes must be substitutable</h3>
+      <p>Any code using <code>Room</code> works identically with <code>StandardRoom</code>, <code>DeluxeRoom</code>, or <code>SuiteRoom</code>:</p>
+      <pre>Room r = RoomFactory.createRoom(type, ...);
+r.getFinalPrice();    // works for ALL subtypes
+r.getRoomType();      // works for ALL subtypes</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag isp">I — Interface Segregation</div>
+      <h3>No unused methods in interfaces</h3>
+      <p><code>IView</code> contains only what a view needs — nothing more. Controllers don't depend on methods they don't use.</p>
+    </div>
+
+    <div class="card">
+      <div class="tag dip">D — Dependency Inversion</div>
+      <h3>Depend on abstractions, not concretions</h3>
+      <pre>// WRONG
+BookingController ctrl = new BookingController(new ConsoleView());
+
+// RIGHT — inject abstraction
+IView view = new ConsoleView();
+BookingController ctrl = new BookingController(view, hotelCtrl);</pre>
+      <p>Swapping <code>ConsoleView</code> for a <code>WebView</code> requires changing only <code>Main.java</code>.</p>
+    </div>
+  </div>
+
+  <!-- PATTERNS -->
+  <div id="patterns" class="section">
+    <h2>Creational Design Patterns</h2>
+
+    <div class="card">
+      <div class="tag factory">Factory Method</div>
+      <h3>RoomFactory.java</h3>
+      <p>Creates Room objects based on runtime type selection. Calling code never uses <code>new DeluxeRoom()</code> directly.</p>
+      <div class="pattern-flow">
+        <div class="flow-box">BookingController</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">RoomFactory.createRoom(DELUXE)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">new DeluxeRoom()</div>
+      </div>
+      <pre>Room room = RoomFactory.createRoom(
+    RoomFactory.RoomType.SUITE,
+    roomId, hotelId, guestName, roomNumber, basePrice
+);</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag builder">Builder Pattern</div>
+      <h3>BookingBuilder.java</h3>
+      <p>Constructs a <code>Booking</code> step by step. Avoids unreadable constructors with 10+ parameters.</p>
+      <pre>Booking booking = new BookingBuilder(bookingId, userId)
+    .hotel(hotel)
+    .rooms(rooms)
+    .nights(3)
+    .checkIn("2025-06-01")
+    .contactEmail("guest@email.com")
+    .paymentStatus("CONFIRMED")
+    .build();</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag singleton">Singleton Pattern</div>
+      <h3>SystemConfig.java</h3>
+      <p>Guarantees one shared instance of system configuration across the entire application. Thread-safe.</p>
+      <pre>SystemConfig config = SystemConfig.getInstance();
+double price  = config.getBasePricePerNight(); // ₹1500
+double gst    = config.getGstRate();           // 0.18
+int    maxBkg = config.getMaxBookingsPerUser(); // 5</pre>
+    </div>
+
+    <div class="card">
+      <div class="tag prototype">Prototype Pattern</div>
+      <h3>HotelPrototype.java</h3>
+      <p>Hotel templates are registered once and cloned with updated availability as needed.</p>
+      <pre>// Template registered once
+registry.put("TAJ", new Hotel("H001", "Taj Palace", ...));
+
+// Cloned with today's availability
+Hotel h = prototype.getHotelTemplate("TAJ", 45);</pre>
+    </div>
+  </div>
+
+  <!-- STRUCTURE -->
+  <div id="structure" class="section">
+    <h2>Project Structure</h2>
+    <div class="tree">
+HotelBookingSystem/<br>
+├── src/<br>
+│   ├── model/<br>
+│   │   ├── entity/<br>
+│   │   │   ├── User.java<br>
+│   │   │   ├── Hotel.java<br>
+│   │   │   ├── Room.java          ← abstract<br>
+│   │   │   ├── StandardRoom.java<br>
+│   │   │   ├── DeluxeRoom.java<br>
+│   │   │   ├── SuiteRoom.java<br>
+│   │   │   └── Booking.java<br>
+│   │   └── service/<br>
+│   │       ├── BookingBuilder.java<br>
+│   │       └── PriceCalculator.java<br>
+│   ├── view/<br>
+│   │   ├── IView.java<br>
+│   │   └── ConsoleView.java<br>
+│   ├── controller/<br>
+│   │   ├── UserController.java<br>
+│   │   ├── HotelController.java<br>
+│   │   └── BookingController.java<br>
+│   ├── factory/<br>
+│   │   ├── RoomFactory.java<br>
+│   │   └── HotelPrototype.java<br>
+│   ├── util/<br>
+│   │   └── SystemConfig.java<br>
+│   └── Main.java<br>
+├── docs/<br>
+│   ├── Architecture-Guide-Part1.md<br>
+│   ├── Architecture-Guide-Part2.md<br>
+│   ├── Architecture-Guide-Part3.md<br>
+│   └── Interactive-Architecture-Guide.html<br>
+└── README.md
+    </div>
+
+    <h3>Compile Command</h3>
+    <pre>javac -d bin \
+  src/model/entity/*.java \
+  src/model/service/*.java \
+  src/util/*.java \
+  src/factory/*.java \
+  src/view/*.java \
+  src/controller/*.java \
+  src/Main.java</pre>
+
+    <h3>Run Command</h3>
+    <pre>java -cp bin Main</pre>
+
+    <h3>Sample Login</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Email</td><td>arjun@example.com</td></tr>
+      <tr><td>Password</td><td>pass123</td></tr>
+    </table>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div id="checklist" class="section">
+    <h2>Build Checklist</h2>
+    <p>Track your progress as you build. Click each item to mark it done.</p>
+
+    <h3>📦 Entity Layer</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create User.java with SRP</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create Hotel.java with Cloneable</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create abstract Room.java with OCP</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create StandardRoom, DeluxeRoom, SuiteRoom (LSP)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create Booking.java with inner Builder</span></li>
+    </ul>
+
+    <h3>⚙️ Service Layer</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create BookingBuilder.java (Builder Pattern)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create PriceCalculator.java (GST + discounts)</span></li>
+    </ul>
+
+    <h3>🏭 Factory Layer</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create RoomFactory.java (Factory Method)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create HotelPrototype.java (Prototype Pattern)</span></li>
+    </ul>
+
+    <h3>🖥️ View Layer</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create IView.java interface (ISP + DIP)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Implement ConsoleView.java</span></li>
+    </ul>
+
+    <h3>🎮 Controller Layer</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create UserController.java (SRP)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create HotelController.java (SRP)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Create BookingController.java (SRP)</span></li>
+    </ul>
+
+    <h3>🔧 Utilities + Entry Point</h3>
+    <ul class="checklist">
+      <li onclick="toggle(this)"><div class="check"></div><span>Create SystemConfig.java (Singleton)</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Wire everything in Main.java</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Compile and test run</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Write README.md</span></li>
+      <li onclick="toggle(this)"><div class="check"></div><span>Push to GitHub with proper commit history</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggle(el) {
+    el.classList.toggle('done');
+  }
+</script>
+</body>
+</html>
